@@ -1,2 +1,2 @@
 # github-action-todo
-auto commit 
+generate code every day and use CLI to commit.
