@@ -6,6 +6,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "gitHooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": "node scripts/verifyCommit.js"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/a631807682/github-action-todo.git"
@@ -23,6 +33,7 @@
   "homepage": "https://github.com/a631807682/github-action-todo#readme",
   "devDependencies": {
     "chalk": "^3.0.0",
+    "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
     "yorkie": "^2.0.0"
   }
