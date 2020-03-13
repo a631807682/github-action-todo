@@ -20,8 +20,8 @@ jobs:
       -
         name: 'Install Package'
         run: 'npm install'
-      # -
-      #   name: 'Update Repo'
-      #   env:
-      #     GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-      #   run: 'stargazed --username  "a631807682" --token ${GITHUB_TOKEN} --repo "awesome-stars" --message "stargazed update by GitHub Actions Workflow" --sort'
+      -
+        name: 'Update Repo'
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: 'node app --username  "a631807682" --token ${GITHUB_TOKEN} --repo "github-action-todo" --sort'
