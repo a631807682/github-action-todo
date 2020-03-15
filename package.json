@@ -38,5 +38,10 @@
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
     "yorkie": "^2.0.0"
+  },
+  "dependencies": {
+    "commander": "^4.1.1",
+    "gh-got": "^9.0.0",
+    "minimist": "^1.2.5"
   }
 }
