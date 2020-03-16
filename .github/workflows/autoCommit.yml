@@ -23,5 +23,5 @@ jobs:
       -
         name: 'Update Repo'
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: '${{ secrets.ACCESS_TOKEN }}'
         run: 'node app/cli --username  "a631807682" --token ${GITHUB_TOKEN} --repo "github-action-todo"'
