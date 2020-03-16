@@ -5,7 +5,7 @@
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "prettier --write app/**/*.js",
+    "lint": "prettier --write **/*.js?(on)",
     "auto-commit": "node app/index.js"
   },
   "gitHooks": {
@@ -13,7 +13,7 @@
     "commit-msg": "node scripts/verifyCommit.js"
   },
   "lint-staged": {
-    "*.js": [
+    "*.js,*.json": [
       "prettier --write",
       "git add"
     ]
