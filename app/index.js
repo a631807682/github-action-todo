@@ -18,7 +18,7 @@ const buildReadmeContent = async context => {
   // render
 }
 
-const updateRepositoryReadme = async (options, contentBuffer) => {
+const updateRepositoryReadme = async (options, { contentBuffer, sha }) => {
   console.log(options)
   const { username, repo, token = '' } = options
   try {
@@ -27,7 +27,8 @@ const updateRepositoryReadme = async (options, contentBuffer) => {
       token,
       body: {
         message: `update readme by workflow`,
-        content: contentBuffer
+        content: contentBuffer,
+        sha
       }
     })
   } catch (err) {
@@ -35,7 +36,7 @@ const updateRepositoryReadme = async (options, contentBuffer) => {
   }
 }
 
-const checkIfReadmeExist = async options => {
+const getReadmeSHA = async options => {
   const { username, repo, token = '' } = options
 
   try {
@@ -56,11 +57,13 @@ module.exports = async options => {
   // await writeReadmeContent(readmeContent)
 
   // test for update to github
+  let sha = await getReadmeSHA()
   let readmeContent = await getReadmeTemplate()
   let appendContent = new Date()
   let content = readmeContent + appendContent
   const contentBuffer = await Buffer.from(unescape(content), 'utf8').toString(
     'base64'
   )
-  await updateRepositoryReadme(options, contentBuffer)
+  await updateRepositoryReadme(options, { contentBuffer, sha })
+  console.log('success')
 }
