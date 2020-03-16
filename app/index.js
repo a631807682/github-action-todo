@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fsp = require('fs').promises
 const path = require('path')
 const ghGot = require('gh-got')
 const README_TEMPLATE_PATH = path.join(__dirname, './templates/README.md')
@@ -7,7 +7,7 @@ const README_TEMPLATE_PATH = path.join(__dirname, './templates/README.md')
  *  Read the template from markdown file
  */
 const getReadmeTemplate = async () => {
-  return fs.readFile(README_TEMPLATE_PATH)
+  return fsp.readFile(README_TEMPLATE_PATH, 'utf8')
 }
 
 /**
@@ -18,33 +18,49 @@ const buildReadmeContent = async context => {
   // render
 }
 
-const updateRepositoryReadme = async ({ contentBuffer, sha }) => {
+const updateRepositoryReadme = async (options, contentBuffer) => {
+  console.log(options)
   const { username, repo, token = '' } = options
-
-  await ghGot(`/repos/${username}/${repo}/contents/README.md`, {
-    method: 'PUT',
-    token,
-    body: {
-      message: message || `update readme by workflow`,
-      content: contentBuffer,
-      sha
-    }
-  })
+  try {
+    await ghGot(`/repos/${username}/${repo}/contents/README.md`, {
+      method: 'PUT',
+      token,
+      body: {
+        message: `update readme by workflow`,
+        content: contentBuffer
+      }
+    })
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 const checkIfReadmeExist = async options => {
   const { username, repo, token = '' } = options
 
-  const body = await ghGot(`/repos/${username}/${repo}/contents/README.md`, {
-    token
-  })
+  try {
+    const body = await ghGot(`/repos/${username}/${repo}/contents/README.md`, {
+      token
+    })
 
-  if (body && body.sha) {
-    return sha
+    if (body && body.sha) {
+      return sha
+    }
+  } catch (err) {
+    console.error(err)
   }
 }
 
 module.exports = async options => {
   // const readmeContent = await buildReadmeContent()
   // await writeReadmeContent(readmeContent)
+
+  // test for update to github
+  let readmeContent = await getReadmeTemplate()
+  let appendContent = new Date()
+  let content = readmeContent + appendContent
+  const contentBuffer = await Buffer.from(unescape(content), 'utf8').toString(
+    'base64'
+  )
+  await updateRepositoryReadme(options, contentBuffer)
 }
