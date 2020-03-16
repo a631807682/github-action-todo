@@ -57,7 +57,7 @@ module.exports = async options => {
   // await writeReadmeContent(readmeContent)
 
   // test for update to github
-  let sha = await getReadmeSHA()
+  let sha = await getReadmeSHA(options)
   let readmeContent = await getReadmeTemplate()
   let appendContent = new Date()
   let content = readmeContent + appendContent
