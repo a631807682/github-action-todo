@@ -8,9 +8,9 @@ program
   .requiredOption('-u, --username <username>', 'GitHub username')
   .requiredOption('-t, --token <token>', 'GitHub token')
   .requiredOption('-r, --repo <repo>', 'repository name')
-  .action(cmd => {
+  .action(async cmd => {
     const options = cleanArgs(cmd)
-    require('./index.js')(options)
+    await require('./index.js')(options)
   })
 
 program.parse(process.argv)

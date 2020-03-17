@@ -32,7 +32,7 @@ const updateRepositoryReadme = async (options, { contentBuffer, sha }) => {
       }
     })
   } catch (err) {
-    console.error(err)
+    throw err
   }
 }
 
@@ -40,15 +40,18 @@ const getReadmeSHA = async options => {
   const { username, repo, token = '' } = options
 
   try {
-    const body = await ghGot(`/repos/${username}/${repo}/contents/README.md`, {
-      token
-    })
+    const { body } = await ghGot(
+      `/repos/${username}/${repo}/contents/README.md`,
+      {
+        token
+      }
+    )
 
     if (body && body.sha) {
-      return sha
+      return body.sha
     }
   } catch (err) {
-    console.error(err)
+    throw err
   }
 }
 
@@ -56,14 +59,18 @@ module.exports = async options => {
   // const readmeContent = await buildReadmeContent()
   // await writeReadmeContent(readmeContent)
 
-  // test for update to github
-  let sha = await getReadmeSHA(options)
-  let readmeContent = await getReadmeTemplate()
-  let appendContent = new Date()
-  let content = readmeContent + appendContent
-  const contentBuffer = await Buffer.from(unescape(content), 'utf8').toString(
-    'base64'
-  )
-  await updateRepositoryReadme(options, { contentBuffer, sha })
-  console.log('success')
+  try {
+    // test for update to github
+    let sha = await getReadmeSHA(options)
+    let readmeContent = await getReadmeTemplate()
+    let appendContent = new Date()
+    let content = readmeContent + appendContent
+    const contentBuffer = await Buffer.from(unescape(content), 'utf8').toString(
+      'base64'
+    )
+    await updateRepositoryReadme(options, { contentBuffer, sha })
+    console.log('success')
+  } catch (err) {
+    console.error(err)
+  }
 }
