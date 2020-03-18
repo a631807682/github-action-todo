@@ -30,7 +30,7 @@ const updateRepositoryReadme = async (options, { contentBuffer, sha }) => {
       method: 'PUT',
       token,
       body: {
-        message: `update readme by workflow`,
+        message: `docs: update readme by workflow`,
         content: contentBuffer,
         sha
       }
@@ -74,13 +74,13 @@ const getReadmeSHA = async options => {
 }
 
 module.exports = async options => {
-    //update to github
-    let readmeContent = await getReadmeTemplate()
-    let appendContent = new Date()
-    let content = readmeContent + appendContent
-    const contentBuffer = await Buffer.from(unescape(content), 'utf8').toString(
-      'base64'
-    )
-    let sha = await getReadmeSHA(options)
-    await updateRepositoryReadme(options, { contentBuffer, sha })
+  //update to github
+  let readmeContent = await getReadmeTemplate()
+  let appendContent = new Date()
+  let content = readmeContent + appendContent
+  const contentBuffer = await Buffer.from(unescape(content), 'utf8').toString(
+    'base64'
+  )
+  let sha = await getReadmeSHA(options)
+  await updateRepositoryReadme(options, { contentBuffer, sha })
 }
