@@ -1,4 +1,9 @@
 const fsp = require('fs').promises
+const {
+  toDisplayString,
+  isGloballyWhitelisted,
+  isLiteralWhitelisted
+} = require('./share')
 
 const defaultParserOptions = {
   delimiters: [`{{`, `}}`]
@@ -7,6 +12,10 @@ const defaultParserOptions = {
 const NodeTypes = {
   TEXT: 0,
   Expression: 1
+}
+
+const getReadmeTemplate = async () => {
+  return fsp.readFile('../templates/README.md', 'utf8')
 }
 
 /**
@@ -21,7 +30,7 @@ const NodeTypes = {
  * @param {string} source
  * @param {object} options
  */
-function parseTemplate(source, options) {
+function parse(source, options) {
   const [open, close] = options.delimiters
   let offset = 0
   let textNodes = []
@@ -61,16 +70,34 @@ function parseTemplate(source, options) {
   return textNodes
 }
 
-const getReadmeTemplate = async () => {
-  return fsp.readFile('../templates/README.md', 'utf8')
+function transform(nodes) {
+  for (let node of nodes) {
+    if (node.type === NodeTypes.Expression) {
+      // fast path if expression is a simple identifier.
+      const rawExp = node.content
+      const bailConstant = rawExp.indexOf(`(`) > -1
+      if (!isGloballyWhitelisted(rawExp) && !isLiteralWhitelisted(rawExp)) {
+        // Transform expressions like {{ foo }} to `_ctx.foo`
+        node.content = `_ctx.` + node.content
+      } else if (!bailConstant) {
+      }
+    }
+  }
+  return nodes
+}
+
+function generate(nodes) {
+  let code = ''
 }
 
 const buildReadmeContent = async (context, options) => {
   let source = await getReadmeTemplate()
-  let nodes = parseTemplate(source, {
+  let nodes = parse(source, {
     ...defaultParserOptions,
     ...options
   })
+  let ast = transform(nodes)
+  // return render()
 }
 
 module.exports = {
