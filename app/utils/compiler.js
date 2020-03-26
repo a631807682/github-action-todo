@@ -103,6 +103,7 @@ const buildReadmeContent = async (context, options) => {
 module.exports = {
   defaultParserOptions,
   NodeTypes,
-  parseTemplate,
+  parse,
+  transform,
   buildReadmeContent
 }

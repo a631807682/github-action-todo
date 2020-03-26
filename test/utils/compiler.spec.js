@@ -1,13 +1,14 @@
 const {
   NodeTypes,
-  parseTemplate,
+  parse,
+  transform,
   defaultParserOptions: options
 } = require('../../app/utils/compiler')
 
 describe('compiler', () => {
   describe('parse', () => {
     test('parse text template', () => {
-      let node = parseTemplate('My name is Tom', options)
+      let node = parse('My name is Tom', options)
       expect(node).toMatchObject([
         {
           type: NodeTypes.TEXT,
@@ -17,7 +18,7 @@ describe('compiler', () => {
     })
 
     test('parse interpolation template', () => {
-      let node = parseTemplate('{{name}}', options)
+      let node = parse('{{name}}', options)
       expect(node).toMatchObject([
         {
           type: NodeTypes.Expression,
@@ -27,7 +28,7 @@ describe('compiler', () => {
     })
 
     test('parse hybrid template', () => {
-      let node = parseTemplate('My name is {{name}}', options)
+      let node = parse('My name is {{name}}', options)
       expect(node).toMatchObject([
         {
           type: NodeTypes.TEXT,
@@ -36,6 +37,24 @@ describe('compiler', () => {
         {
           type: NodeTypes.Expression,
           content: 'name'
+        }
+      ])
+    })
+  })
+
+  describe('transform', () => {
+    test('transform interpolation expressions', () => {
+      const ast = transform([
+        {
+          type: NodeTypes.Expression,
+          content: 'name'
+        }
+      ])
+
+      expect(ast).toMatchObject([
+        {
+          type: NodeTypes.Expression,
+          content: '_ctx.name'
         }
       ])
     })
