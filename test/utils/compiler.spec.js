@@ -2,6 +2,7 @@ const {
   NodeTypes,
   parse,
   transform,
+  generate,
   defaultParserOptions: options
 } = require('../../app/utils/compiler')
 
@@ -46,6 +47,10 @@ describe('compiler', () => {
     test('transform interpolation expressions', () => {
       const ast = transform([
         {
+          type: NodeTypes.TEXT,
+          content: 'My name is '
+        },
+        {
           type: NodeTypes.Expression,
           content: 'name'
         }
@@ -53,10 +58,45 @@ describe('compiler', () => {
 
       expect(ast).toMatchObject([
         {
+          type: NodeTypes.TEXT,
+          content: "'My name is '"
+        },
+        {
           type: NodeTypes.Expression,
           content: '_ctx.name'
         }
       ])
+    })
+  })
+
+  describe('generate', () => {
+    const codeStringify = code => {
+      let res = ''
+      for (let line of code.split('\n')) {
+        res += line.trim()
+      }
+      return res
+    }
+
+    test('generate hybrid ast', () => {
+      const ast = [
+        {
+          type: NodeTypes.TEXT,
+          content: "'My name is '"
+        },
+        {
+          type: NodeTypes.Expression,
+          content: '_ctx.name'
+        }
+      ]
+      let code = generate(ast)
+      expect(codeStringify(code)).toMatch(
+        codeStringify(`return function render(_ctx) {
+          return 'My name is '+_ctx.name
+        }`)
+      )
+      let render = new Function(code)()
+      expect(render({ name: 'Tom' })).toMatch('My name is Tom')
     })
   })
 })

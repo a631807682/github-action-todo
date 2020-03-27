@@ -81,13 +81,31 @@ function transform(nodes) {
         node.content = `_ctx.` + node.content
       } else if (!bailConstant) {
       }
+    } else if (node.type === NodeTypes.TEXT) {
+      node.content = `'${node.content}'`
     }
   }
   return nodes
 }
 
+function newLine(code, n = 1) {
+  return code + '\n' + '  '.repeat(n)
+}
+
 function generate(nodes) {
-  let code = ''
+  const codeStart = `return function render(_ctx) {`
+  const codeEnd = `}`
+  const codeReturn = `return `
+
+  let code = codeStart
+  code = newLine(code)
+  code += codeReturn
+
+  code += nodes.map(n => n.content).join('+')
+
+  code = newLine(code)
+  code += codeEnd
+  return code
 }
 
 const buildReadmeContent = async (context, options) => {
@@ -97,7 +115,9 @@ const buildReadmeContent = async (context, options) => {
     ...options
   })
   let ast = transform(nodes)
-  // return render()
+  let code = generate(ast)
+  let render = new Function(code)()
+  return render(context)
 }
 
 module.exports = {
@@ -105,5 +125,6 @@ module.exports = {
   NodeTypes,
   parse,
   transform,
+  generate,
   buildReadmeContent
 }
