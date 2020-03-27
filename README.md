@@ -4,6 +4,6 @@
 
 Here is a demo to compiler readme template and commit README.md file everyday by workflow.
 
-# Last Update time
+# Last Updated
 
-Fri Mar 27 2020 16:23:52 GMT+0800 (GMT+08:00)
+Fri Mar 27 2020 19:51:59 GMT+0800 (GMT+08:00)
