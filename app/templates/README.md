@@ -1,5 +1,7 @@
 # github-action-todo
-generate code every day and use CLI to commit.
+
+Here is a demo to compiler readme template and commit README.md file everyday by workflow.
 
 # Last Update time
-{{datetime}}
+
+{{dateTime}}

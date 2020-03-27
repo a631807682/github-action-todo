@@ -1,4 +1,5 @@
 const fsp = require('fs').promises
+const path = require('path')
 const {
   toDisplayString,
   isGloballyWhitelisted,
@@ -15,7 +16,8 @@ const NodeTypes = {
 }
 
 const getReadmeTemplate = async () => {
-  return fsp.readFile('../templates/README.md', 'utf8')
+  let filePath = path.join(__dirname, '../templates/README.md')
+  return fsp.readFile(filePath, 'utf8')
 }
 
 /**
