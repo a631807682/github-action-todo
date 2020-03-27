@@ -38,7 +38,7 @@ function parse(source, options) {
   let textNodes = []
   while (offset < source.length - 1) {
     let nodes = []
-    const openIndex = source.indexOf(open)
+    const openIndex = source.indexOf(open, offset)
     if (openIndex === -1) {
       nodes.push({
         type: NodeTypes.TEXT,
@@ -84,7 +84,7 @@ function transform(nodes) {
       } else if (!bailConstant) {
       }
     } else if (node.type === NodeTypes.TEXT) {
-      node.content = `'${node.content}'`
+      node.content = `\`${node.content}\``
     }
   }
   return nodes
@@ -101,8 +101,8 @@ function generate(nodes) {
 
   let code = codeStart
   code = newLine(code)
-  code += codeReturn
 
+  code += codeReturn
   code += nodes.map(n => n.content).join('+')
 
   code = newLine(code)
@@ -111,6 +111,7 @@ function generate(nodes) {
 }
 
 const buildReadmeContent = async (context, options) => {
+  // TODO: add spinner message
   let source = await getReadmeTemplate()
   let nodes = parse(source, {
     ...defaultParserOptions,

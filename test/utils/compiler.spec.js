@@ -59,7 +59,7 @@ describe('compiler', () => {
       expect(ast).toMatchObject([
         {
           type: NodeTypes.TEXT,
-          content: "'My name is '"
+          content: '`My name is `'
         },
         {
           type: NodeTypes.Expression,
@@ -82,7 +82,7 @@ describe('compiler', () => {
       const ast = [
         {
           type: NodeTypes.TEXT,
-          content: "'My name is '"
+          content: '`My name is `'
         },
         {
           type: NodeTypes.Expression,
@@ -92,7 +92,7 @@ describe('compiler', () => {
       let code = generate(ast)
       expect(codeStringify(code)).toMatch(
         codeStringify(`return function render(_ctx) {
-          return 'My name is '+_ctx.name
+          return \`My name is \`+_ctx.name
         }`)
       )
       let render = new Function(code)()
