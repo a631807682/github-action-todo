@@ -36,6 +36,7 @@ function parse(source, options) {
   const [open, close] = options.delimiters
   let offset = 0
   let textNodes = []
+  // TODO: should parse line by line
   while (offset < source.length - 1) {
     let nodes = []
     const openIndex = source.indexOf(open, offset)
