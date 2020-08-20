@@ -6,4 +6,4 @@ Here is a demo to compiler readme template and commit README.md file everyday by
 
 # Last Updated
 
-Wed Aug 19 2020 00:52:26 GMT+0000 (Coordinated Universal Time)
+Thu Aug 20 2020 00:52:26 GMT+0000 (Coordinated Universal Time)
